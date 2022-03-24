@@ -4,12 +4,15 @@ import numpy as np
 from matplotlib import pyplot as plt
 import add2pictures2one
 
+cv2.setUseOptimized(True)
+
+
 pic1 = cv2.imread("./Images/sudoku_paper2.png",
                   cv2.IMREAD_UNCHANGED)  # color
 # pic1 = pic1[:, :, ::-1] ## only need when pyplot is used
 
 
-corners = np.array([[217, 727, 116, 673], [139, 188, 573, 611]])
+corners = np.array([[111, 544, 74, 495], [117, 215, 671, 729]])
 sz = 400
 des = np.array([[0, sz, 0, sz], [0, 0, sz, sz]])
 
@@ -30,7 +33,7 @@ M = cv2.getPerspectiveTransform(corners.transpose().astype(
 
 dst = cv2.warpPerspective(pic1, M, (sz, sz))
 
-pic = add2pictures2one.shiftAndAdd(pic1, dst)
+pic = add2pictures2one.shiftAndAdd(pic1, dst, factor=1)
 cv2.imshow('sudoku', pic)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

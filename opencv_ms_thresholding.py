@@ -1,8 +1,10 @@
+from ast import Num
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-pic = cv2.imread("./Images/resized_cropped_region_2x.png", 0)
+
+pic = cv2.imread("./Images/sudoku_paper2.png", 0)
 # cv2.imshow('normal', pic)
 
 
