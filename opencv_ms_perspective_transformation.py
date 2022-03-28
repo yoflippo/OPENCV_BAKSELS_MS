@@ -32,8 +32,9 @@ M = cv2.getPerspectiveTransform(corners.transpose().astype(
     'float32'), des.transpose().astype('float32'))
 
 dst = cv2.warpPerspective(pic1, M, (sz, sz))
+cv2.imshow('warped', dst)
 
-pic = add2pictures2one.shiftAndAdd(pic1, dst, factor=1)
+pic = add2pictures2one.shiftAndAdd(pic1, dst)
 cv2.imshow('sudoku', pic)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

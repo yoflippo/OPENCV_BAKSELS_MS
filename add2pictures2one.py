@@ -72,7 +72,7 @@ def __scaleFigures(pic1, pic2, factor=0.5):
 def __shiftAndAdd(pic1, pic2):
     rows1, cols1, _ = pic1.shape
     rows2, cols2, _ = pic2.shape
-    M = np.float32([[1, 0, max(cols1, cols2)], [0, 1, 0]])
+    M = np.float32([[1, 0, cols1], [0, 1, 0]])
     pic_shifted = cv2.warpAffine(pic2, M, (cols1+cols2, max(rows1, rows2)))
 
     # add picture to larger picture

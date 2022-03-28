@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 from matplotlib import pyplot as plt
 
 pic = cv2.imread("./Images/New_Zealand_Lake.jpg",
@@ -31,7 +30,8 @@ def applyGaussianBlur(image, start=2, end=7, step=1):
 
 
 def plotBlurredImages(images_gb, stepsizes_gb, images_mb, sz):
-    for (image_gb, stepsize, image_mb) in zip(images_gb, stepsizes_gb, images_mb):
+    for (image_gb, stepsize, image_mb) in zip(images_gb, stepsizes_gb,
+                                              images_mb):
         for i in range(len(stepsizes_gb)):
             plt.subplot(1, 3, 1), plt.imshow(
                 pic[:, :, ::-1]), plt.title('normal, stepsize =  ' + stepsize)

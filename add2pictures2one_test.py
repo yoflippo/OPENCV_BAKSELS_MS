@@ -10,6 +10,6 @@ pic1 = cv2.imread("./Images/canada.jpg",
 pic2 = cv2.imread("./Images/colorful_umbrella.jpg",
                   cv2.IMREAD_UNCHANGED)  # color
 
-cv2.imshow('pic1, pic2 and combined', ad.shiftAndAdd(pic1, pic2, 0.5))
+cv2.imshow('pic1, pic2 and combined', ad.shiftAndAdd(pic1, pic2, 1))
 cv2.waitKey(0)
 cv2.destroyAllWindows()
