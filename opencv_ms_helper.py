@@ -1,3 +1,6 @@
+import os
+
+
 class opencv_ms_helper:
     # def _init_(self):
     def __init__(self, opencvref, numpyref, blUseOptimizedCV2=False):
@@ -94,3 +97,17 @@ class opencv_ms_helper:
             pic_diff = pic1.astype('float32')-pic2.astype('float32')
             self.np.abs(pic_diff)
             return pic_diff.astype('uint8')
+
+    def makeBinaryPicture(self, pic):
+        grayImage = self.cv2.cvtColor(pic, self.cv2.COLOR_BGR2GRAY)
+        _, bwImage = self.cv2.threshold(
+            grayImage, 127, 255, self.cv2.THRESH_BINARY)
+        return bwImage
+
+    def makeBinaryPictureAndSave(self, pic, picLocation):
+        pic_bw = self.makeBinaryPicture(pic)
+        postfix = "_baw"
+        pathname, extension = os.path.splitext(picLocation)
+        picloc = pathname + postfix + extension
+        self.cv2.imwrite(picloc, pic_bw)
+        return pic_bw
