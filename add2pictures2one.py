@@ -44,7 +44,7 @@ def __makeSameSizeByScaling(pic1, pic2, factor=0.5):
     (h, w) = __getScaledHeightAndWidth(
         picbig, findSmallestFactor(h1, h2, w1, w2))
 
-    if np.all(np.equal(picbig, pic1)):
+    if np.all(np.equal(picbig.shape, pic1.shape)):
         pic1out = cv2.resize(
             pic1, (w, h), interpolation=cv2.INTER_CUBIC)
         pic2out = pic2
@@ -56,7 +56,7 @@ def __makeSameSizeByScaling(pic1, pic2, factor=0.5):
     return pic1out, pic2out
 
 
-def __scaleFigures(pic1, pic2, factor=0.5):
+def __scaleFigures(pic1, pic2, factor=1):
 
     h, w = __getScaledHeightAndWidth(pic1, factor)
     pic1out = cv2.resize(
@@ -80,7 +80,7 @@ def __shiftAndAdd(pic1, pic2):
     return pic_shifted
 
 
-def shiftAndAdd(pic1, pic2, factor=0.5, rescale=True):
+def shiftAndAdd(pic1, pic2, factor=1, rescale=False):
     # https://docs.opencv.org/4.x/d0/d86/tutorial_py_image_arithmetics.html
     if rescale:
         return __shiftAndAdd(*__scaleFigures(

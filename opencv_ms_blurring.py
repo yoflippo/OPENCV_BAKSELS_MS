@@ -46,8 +46,8 @@ def plotBlurredImages(images_gb, stepsizes_gb, images_mb, sz):
         plt.show()
 
 
-plotBlurredImages(*applyGaussianBlur(pic, 3, 8, 2),
-                  *applyGaussianBlur(pic, 3, 8, 2))
+plotBlurredImages(*applyGaussianBlur(pic, 7, 8, 2),
+                  *applyGaussianBlur(pic, 7, 8, 2))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
