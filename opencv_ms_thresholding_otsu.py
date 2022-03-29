@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 from matplotlib import pyplot as plt
 
 pic = cv2.imread("./Images/resized_cropped_region_2x.png", 0)

@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 
 pic1 = cv2.imread("./Images/canada.jpg",
                   cv2.IMREAD_UNCHANGED)  # color

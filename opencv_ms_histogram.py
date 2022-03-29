@@ -1,6 +1,5 @@
 import cv2
-import numpy as np
-from matplotlib import cm, pyplot as plt
+from matplotlib import pyplot as plt
 
 picloc = "./Images/colorful_umbrella.jpg"
 picgray = cv2.imread(picloc, 0)

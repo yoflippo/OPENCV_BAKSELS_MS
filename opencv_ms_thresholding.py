@@ -1,6 +1,4 @@
-from ast import Num
 import cv2
-import numpy as np
 from matplotlib import pyplot as plt
 
 
@@ -8,7 +6,8 @@ pic = cv2.imread("./Images/sudoku_paper2.png", 0)
 # cv2.imshow('normal', pic)
 
 
-def setofthresholds(pic, start_threshold=10, end_threshold=250, steps_size=40, thresholding_type=cv2.THRESH_BINARY):
+def setofthresholds(pic, start_threshold=10, end_threshold=250, steps_size=40,
+                    thresholding_type=cv2.THRESH_BINARY):
     for step in range(start_threshold, end_threshold, steps_size):
         (T_value, pic_binary_threshold) = cv2.threshold(
             pic, step, 255, thresholding_type)

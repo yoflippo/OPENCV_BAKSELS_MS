@@ -1,10 +1,9 @@
 # https://docs.opencv.org/4.x/da/d6e/tutorial_py_geometric_transformations.html
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
-import add2pictures2one
+import opencv_ms_helper
 
-cv2.setUseOptimized(True)
+h = opencv_ms_helper.opencv_ms_helper(cv2, np, True)
 
 
 pic1 = cv2.imread("./Images/sudoku_paper2.png",
@@ -34,7 +33,7 @@ M = cv2.getPerspectiveTransform(corners.transpose().astype(
 dst = cv2.warpPerspective(pic1, M, (sz, sz))
 cv2.imshow('warped', dst)
 
-pic = add2pictures2one.shiftAndAdd(pic1, dst)
+pic = h.shiftAndAdd(pic1, dst)
 cv2.imshow('sudoku', pic)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
