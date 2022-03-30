@@ -71,8 +71,8 @@ class opencv_ms_helper:
         return pic1out, pic2out
 
     def _shiftAndAdd(self, pic1, pic2):
-        rows1, cols1, _ = pic1.shape
-        rows2, cols2, _ = pic2.shape
+        rows1, cols1 = pic1.shape[:2]
+        rows2, cols2 = pic2.shape[:2]
         M = self.np.float32([[1, 0, cols1], [0, 1, 0]])
         pic_shifted = self.cv2.warpAffine(
             pic2, M, (cols1+cols2, max(rows1, rows2)))
@@ -104,10 +104,12 @@ class opencv_ms_helper:
             grayImage, 127, 255, self.cv2.THRESH_BINARY)
         return bwImage
 
+    def addPostFixToImageName(self, picLocation, postfix=""):
+        pathname, extension = os.path.splitext(picLocation)
+        return pathname + postfix + extension
+
     def makeBinaryPictureAndSave(self, pic, picLocation):
         pic_bw = self.makeBinaryPicture(pic)
-        postfix = "_baw"
-        pathname, extension = os.path.splitext(picLocation)
-        picloc = pathname + postfix + extension
+        picloc = self.addPostFixToImageName(picLocation, "_baw")
         self.cv2.imwrite(picloc, pic_bw)
         return pic_bw
