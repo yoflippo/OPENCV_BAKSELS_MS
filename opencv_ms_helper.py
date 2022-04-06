@@ -71,6 +71,11 @@ class opencv_ms_helper:
         return pic1out, pic2out
 
     def _shiftAndAdd(self, pic1, pic2):
+        if len(pic1.shape) <= 2:
+            pic1 = self.cv2.cvtColor(pic1, self.cv2.COLOR_GRAY2RGB)
+        if len(pic2.shape) <= 2:
+            pic2 = self.cv2.cvtColor(pic2, self.cv2.COLOR_GRAY2RGB)
+
         rows1, cols1 = pic1.shape[:2]
         rows2, cols2 = pic2.shape[:2]
         M = self.np.float32([[1, 0, cols1], [0, 1, 0]])
@@ -113,3 +118,20 @@ class opencv_ms_helper:
         picloc = self.addPostFixToImageName(picLocation, "_baw")
         self.cv2.imwrite(picloc, pic_bw)
         return pic_bw
+
+    def shiftAndAddHorizontal(self, pic1, pic2, factor=1):
+        h1, w1 = pic1.shape[:2]
+        h2, w2 = pic2.shape[:2]
+        pic_out = self.np.zeros((max(h1, h2), w1+w2, 3), dtype=self.np.uint8)
+        pic_out[:, :] = (255, 255, 255)
+        pic_out[:h1, :w1, :3] = pic1
+        pic_out[:h2, w1:w1+w2, :3] = pic2
+        return pic_out
+
+    def scaleImage(self, pic, factor=1.0):
+        if factor < 1.0:
+            h = int(pic.shape[0]/2)
+            w = int(pic.shape[1]/2)
+            return self.cv2.resize(pic, (w, h), interpolation=self.cv2.INTER_CUBIC)
+        else:
+            return pic

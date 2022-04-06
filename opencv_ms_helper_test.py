@@ -48,4 +48,4 @@ def makeBinaryPictureAndSave_Test():
 ShiftAndAdd_Test()
 # getDifferenceBetweenPictures_Test()
 # makeBinaryPicture_Test()
-makeBinaryPictureAndSave_Test()
+# makeBinaryPictureAndSave_Test()
