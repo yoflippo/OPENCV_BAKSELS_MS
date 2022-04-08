@@ -25,6 +25,7 @@ h, w = template_gray.shape[:2]
 for pt in zip(*loc[::-1]):
     cv2.rectangle(pic1, pt, (pt[0]+w, pt[1]+h), (0, 0, 255), 1)
 
+mshelp.shiftAndAddHorizontal(pic1, res)
 cv2.imshow("mario original with detected features", pic1)
 cv2.imshow("mario result", res)
 cv2.waitKey(0)

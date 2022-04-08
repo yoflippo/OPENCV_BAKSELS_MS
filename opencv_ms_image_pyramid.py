@@ -7,6 +7,9 @@ mshelp = opencv_ms_helper.opencv_ms_helper(cv2, np)
 path1 = "./Images/lena.jpg"
 pic1 = cv2.imread(path1, cv2.IMREAD_UNCHANGED)
 
+# Make Gray
+# pic1 = cv2.cvtColor(pic1, cv2.COLOR_RGB2GRAY)
+
 if pic1 is not None:
     print("succesfully read picture")
 else:

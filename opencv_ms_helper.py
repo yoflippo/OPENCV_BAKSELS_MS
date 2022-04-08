@@ -1,4 +1,5 @@
 import os
+from shutil import SpecialFileError
 
 
 class opencv_ms_helper:
@@ -6,7 +7,7 @@ class opencv_ms_helper:
     def __init__(self, opencvref, numpyref, blUseOptimizedCV2=False):
         self.cv2 = opencvref
         self.np = numpyref
-        opencvref.setUseOptimized(blUseOptimizedCV2)
+        # opencvref.setUseOptimized(blUseOptimizedCV2)
 
     def _cutPicturesToSimilarSize(self, pic1, pic2):
         sz1 = pic1.shape
@@ -119,14 +120,27 @@ class opencv_ms_helper:
         self.cv2.imwrite(picloc, pic_bw)
         return pic_bw
 
-    def shiftAndAddHorizontal(self, pic1, pic2, factor=1):
+    def shiftAndAddHorizontal(self, pic1, pic2):
+        if len(pic1.shape) <= 2:
+            pic1 = self.cv2.cvtColor(pic1, self.cv2.COLOR_GRAY2BGR)
+        if len(pic2.shape) <= 2:
+            pic2 = self.cv2.cvtColor(pic2, self.cv2.COLOR_GRAY2BGR)
+
         h1, w1 = pic1.shape[:2]
         h2, w2 = pic2.shape[:2]
         pic_out = self.np.zeros((max(h1, h2), w1+w2, 3), dtype=self.np.uint8)
-        pic_out[:, :] = (255, 255, 255)
+        pic_out[:, :] = (0, 0, 0)
         pic_out[:h1, :w1, :3] = pic1
-        pic_out[:h2, w1:w1+w2, :3] = pic2
+        pic_out[:h2, w1:(w1+w2), :3] = pic2
+        # self.cv2.imshow("show from within shiftAndAddHorizontal", pic_out)
         return pic_out
+
+    def shiftAndAddHorizontal3(self, pic1, pic2, pic3, factor=1.0):
+        pic1 = self.scaleImage(pic1, factor)
+        pic2 = self.scaleImage(pic2, factor)
+        pic3 = self.scaleImage(pic3, factor)
+        out = self.shiftAndAddHorizontal(pic1, pic2)
+        return self.shiftAndAddHorizontal(out, pic3)
 
     def scaleImage(self, pic, factor=1.0):
         if factor < 1.0:
@@ -135,3 +149,16 @@ class opencv_ms_helper:
             return self.cv2.resize(pic, (w, h), interpolation=self.cv2.INTER_CUBIC)
         else:
             return pic
+
+    def makePyramids(self, pic, numberDown=2, numberUp=0):
+        layerup = pic.copy()
+        layerdown = pic.copy()
+        gp = [layerdown]
+
+        for i in range(numberDown):
+            layerdown = self.cv2.pyrDown(layerdown)
+            gp.append(layerdown)
+        for i in range(numberUp):
+            layerup = self.cv2.pyrUp(layerup)
+            gp.append(layerup)
+        return gp
