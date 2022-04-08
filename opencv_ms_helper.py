@@ -130,8 +130,9 @@ class opencv_ms_helper:
         h2, w2 = pic2.shape[:2]
         pic_out = self.np.zeros((max(h1, h2), w1+w2, 3), dtype=self.np.uint8)
         pic_out[:, :] = (0, 0, 0)
-        pic_out[:h1, :w1, :3] = pic1
-        pic_out[:h2, w1:(w1+w2), :3] = pic2
+        # [:,:,:3] to ignore a transparency channel
+        pic_out[:h1, :w1, :3] = pic1[:, :, :3]
+        pic_out[:h2, w1:(w1+w2), :3] = pic2[:, :, :3]
         # self.cv2.imshow("show from within shiftAndAddHorizontal", pic_out)
         return pic_out
 

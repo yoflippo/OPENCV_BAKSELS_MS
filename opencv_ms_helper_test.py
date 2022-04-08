@@ -28,6 +28,13 @@ def ShiftAndAdd_Test():
     _showResult(h.shiftAndAdd(pic1, pic2, 1), 'shift and add picture')
 
 
+def ShiftAndAddHorizontal_Test():
+    pic1, pic2, _, _ = _getPictures()
+    # pic1 = pic1[:, :, ::-1] ## only need when pyplot is used
+    _showResult(h.shiftAndAddHorizontal(
+        pic1, pic2), 'shift and add picture')
+
+
 def getDifferenceBetweenPictures_Test():
     pic1, pic2, _, _ = _getPictures()
     pic2 = cv2.GaussianBlur(pic1, (5, 5), 1)
@@ -45,7 +52,8 @@ def makeBinaryPictureAndSave_Test():
     _showResult(h.makeBinaryPictureAndSave(pic1, path1), 'black and white')
 
 
-ShiftAndAdd_Test()
+ShiftAndAddHorizontal_Test()
+# ShiftAndAdd_Test()
 # getDifferenceBetweenPictures_Test()
 # makeBinaryPicture_Test()
 # makeBinaryPictureAndSave_Test()
