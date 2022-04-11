@@ -1,5 +1,4 @@
 import os
-from shutil import SpecialFileError
 
 
 class opencv_ms_helper:
@@ -120,11 +119,28 @@ class opencv_ms_helper:
         self.cv2.imwrite(picloc, pic_bw)
         return pic_bw
 
+    def __giveGrayImageThreeDim(self, pic1, pic2):
+        def testAndGiveThreeDim(pic):
+            if len(pic.shape) <= 2:
+                pic = self.cv2.cvtColor(pic, self.cv2.COLOR_GRAY2BGR)
+            return pic
+        return testAndGiveThreeDim(pic1), testAndGiveThreeDim(pic2)
+
+    def shiftAndAddVertical(self, pic1, pic2):
+        pic1, pic2 = self.__giveGrayImageThreeDim(pic1, pic2)
+        h1, w1 = pic1.shape[:2]
+        h2, w2 = pic2.shape[:2]
+        pic_out = self.np.zeros((h1+h2, max(w1, w2), 3), dtype=self.np.uint8)
+        pic_out[:, :] = (0, 0, 0)
+        # [:,:,:3] to ignore a transparency channel
+        pic_out[:h1, :w1, :3] = pic1[:, :, :3]
+        # pic_out[:h2, w1:(w1+w2), :3] = pic2[:, :, :3]
+        pic_out[h1:(h1+h2), :w2, :3] = pic2[:, :, :3]
+        # self.cv2.imshow("show from within shiftAndAddHorizontal", pic_out)
+        return pic_out
+
     def shiftAndAddHorizontal(self, pic1, pic2):
-        if len(pic1.shape) <= 2:
-            pic1 = self.cv2.cvtColor(pic1, self.cv2.COLOR_GRAY2BGR)
-        if len(pic2.shape) <= 2:
-            pic2 = self.cv2.cvtColor(pic2, self.cv2.COLOR_GRAY2BGR)
+        pic1, pic2 = self.__giveGrayImageThreeDim(pic1, pic2)
 
         h1, w1 = pic1.shape[:2]
         h2, w2 = pic2.shape[:2]
@@ -136,6 +152,13 @@ class opencv_ms_helper:
         # self.cv2.imshow("show from within shiftAndAddHorizontal", pic_out)
         return pic_out
 
+    def combineFourImagesInQuadrant(self, pic_lh, pic_rh, pic_ll, pic_rl,
+                                    factor=1.0):
+        picup = self.shiftAndAddHorizontal(pic_lh, pic_rh)
+        picdo = self.shiftAndAddHorizontal(pic_ll, pic_rl)
+        picout = self.shiftAndAddVertical(picup, picdo)
+        return self.scaleImage(picout, factor)
+
     def shiftAndAddHorizontal3(self, pic1, pic2, pic3, factor=1.0):
         pic1 = self.scaleImage(pic1, factor)
         pic2 = self.scaleImage(pic2, factor)
@@ -144,12 +167,9 @@ class opencv_ms_helper:
         return self.shiftAndAddHorizontal(out, pic3)
 
     def scaleImage(self, pic, factor=1.0):
-        if factor < 1.0:
-            h = int(pic.shape[0]/2)
-            w = int(pic.shape[1]/2)
-            return self.cv2.resize(pic, (w, h), interpolation=self.cv2.INTER_CUBIC)
-        else:
-            return pic
+        h = int(pic.shape[0]*factor)
+        w = int(pic.shape[1]*factor)
+        return self.cv2.resize(pic, (w, h), interpolation=self.cv2.INTER_CUBIC)
 
     def makePyramids(self, pic, numberDown=2, numberUp=0):
         layerup = pic.copy()
