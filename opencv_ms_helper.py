@@ -183,3 +183,28 @@ class opencv_ms_helper:
             layerup = self.cv2.pyrUp(layerup)
             gp.append(layerup)
         return gp
+
+    def shiftBinaryUDLR(self, pic_binary):
+        def addOrImage(picbig, sh, eh, sw, ew, picsmall):
+            picbig[sh:eh, sw:ew] = self.cv2.bitwise_or(
+                picbig[sh:eh, sw:ew], picsmall)
+            return picbig
+
+        if len(pic_binary.shape) <= 2:
+            h, w = pic_binary.shape[:2]
+            pic_out = self.np.zeros((h+2, w+2), dtype=self.np.uint8)
+            pic_out[:h, :w] = pic_binary
+            pic_out = addOrImage(pic_out, 1, h+1, 1, w+1, pic_binary)
+            pic_out = addOrImage(pic_out, 0, h+0, 1, w+1, pic_binary)
+            pic_out = addOrImage(pic_out, 1, h+1, 0, w+0, pic_binary)
+        return pic_out[:h, :w]
+
+    def applyGaussianBlur(self, image, size=3):
+        if size % 2 == 0:
+            size + 1
+        M = (size, size)
+        return self.cv2.GaussianBlur(image, M, 0)
+
+    def sharpenImageBasedOnGaussianBlur(self, pic, blurfactor=11):
+        blurred = self.applyGaussianBlur(pic, blurfactor)
+        return self.cv2.addWeighted(pic, 1.5, blurred, -0.5, 0)
