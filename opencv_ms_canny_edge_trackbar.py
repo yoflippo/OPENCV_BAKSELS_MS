@@ -13,7 +13,8 @@ def funcCan(thresh1=0):
         blurfactor + 1
     pic = cv2.GaussianBlur(img, (blurfactor, blurfactor), 0)
     edge = cv2.Canny(pic, thresh1, thresh2)
-    cv2.imshow('canny', edge)
+    edge = h.shiftBinaryUDLR(edge)
+    cv2.imshow('canny', 255-edge)
 
 
 if __name__ == '__main__':

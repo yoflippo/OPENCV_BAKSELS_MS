@@ -1,13 +1,10 @@
 import cv2
-from matplotlib import pyplot as plt
 import opencv_ms_helper
 import numpy as np
 h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 
-
-pic = cv2.imread("./Images/ms.jpg",
+pic = cv2.imread("./Images/unsharp_javalaan.png",
                  cv2.IMREAD_UNCHANGED)  # color
-pic = h.scaleImage(pic, 0.4)
 
 
 def applyGaussianBlur(image, size=3):
@@ -15,23 +12,23 @@ def applyGaussianBlur(image, size=3):
     return cv2.GaussianBlur(image, M, 0)
 
 
-cols = 3
-plt.subplot(1, cols, 1), plt.imshow(
-    pic[:, :, ::-1]), plt.title('normal')
-plt.xticks([]), plt.yticks([])
-# [:,:,::-1] to change the order of colors
-
-blurred = applyGaussianBlur(pic, 11)
-plt.subplot(1, cols, 2), plt.imshow(blurred[:, :, ::-1]),
-plt.title('gaussian')
-
-sharpen = h.sharpenImageBasedOnGaussianBlur(pic, 21)
-plt.subplot(1, cols, 3), plt.imshow(sharpen[:, :, ::-1]),
-plt.title('normal minus gaussian')
+def applyTextToImage(image, txt):
+    return cv2.putText(image, text=txt, org=(150, 250),
+                       fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                       fontScale=3,
+                       color=(255, 255, 0),
+                       thickness=5)
 
 
-plt.show()
+blurSize = 101
+blurred = applyGaussianBlur(pic, blurSize)
+blurred = applyTextToImage(blurred, "blurred, kernel: " + str(blurSize))
+sharpen = h.sharpenImageBasedOnGaussianBlur(pic, blurSize)
+sharpen = applyTextToImage(sharpen, "sharpen, kernel: " + str(blurSize))
+pic = applyTextToImage(pic, "normal")
+combined = h.combineFourImagesInQuadrant(pic, blurred, pic, sharpen, 0.3)
 
 
+cv2.imshow("normal,blurred,sharpen", combined)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
