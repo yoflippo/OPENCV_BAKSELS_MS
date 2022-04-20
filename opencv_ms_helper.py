@@ -119,12 +119,13 @@ class opencv_ms_helper:
         self.cv2.imwrite(picloc, pic_bw)
         return pic_bw
 
+    def __testAndGiveThreeDim(self, pic):
+        if len(pic.shape) <= 2:
+            pic = self.cv2.cvtColor(pic, self.cv2.COLOR_GRAY2BGR)
+        return pic
+
     def __giveGrayImageThreeDim(self, pic1, pic2):
-        def testAndGiveThreeDim(pic):
-            if len(pic.shape) <= 2:
-                pic = self.cv2.cvtColor(pic, self.cv2.COLOR_GRAY2BGR)
-            return pic
-        return testAndGiveThreeDim(pic1), testAndGiveThreeDim(pic2)
+        return self.__testAndGiveThreeDim(pic1), self.__testAndGiveThreeDim(pic2)
 
     def shiftAndAddVertical(self, pic1, pic2):
         pic1, pic2 = self.__giveGrayImageThreeDim(pic1, pic2)
@@ -212,7 +213,7 @@ class opencv_ms_helper:
         return self.cv2.addWeighted(pic, 1.5, blurred, -0.5, 0)
 
     def applyTextToImage(self, image, txt):
-        return self.cv2.putText(image, text=txt, org=(50, 50),
+        return self.cv2.putText(image, text=txt, org=(30, 50),
                                 fontFace=self.cv2.FONT_HERSHEY_PLAIN,
                                 fontScale=3,
                                 color=(0, 255, 0),
@@ -221,3 +222,37 @@ class opencv_ms_helper:
     def applyNormalizationToFloatImage(self, pic):
         return self.cv2.normalize(pic, None, 255, 0, self.cv2.NORM_MINMAX,
                                   self.cv2.CV_8UC1)
+
+    def gradientColor(self, pic, threshbinarylow=50):
+        pic1 = self.applyGaussianBlur(pic, 3)
+        sobelx = self.cv2.Sobel(pic1, self.cv2.CV_32F, 1, 0)
+        sobely = self.cv2.Sobel(pic1, self.cv2.CV_32F, 0, 1)
+
+        orien = self.cv2.phase(sobelx, sobely, angleInDegrees=True)
+        mag = self.cv2.magnitude(sobelx, sobely)
+
+        _, mask = self.cv2.threshold(
+            mag, threshbinarylow, 255, self.cv2.THRESH_BINARY)
+
+        red = self.np.array([0, 0, 255])
+        cyan = self.np.array([255, 255, 0])
+        green = self.np.array([0, 255, 0])
+        yellow = self.np.array([0, 255, 255])
+        black = self.np.array([0, 0, 0])
+
+        orientcolor = self.np.zeros(
+            (orien.shape[0], orien.shape[1], 3), dtype=self.np.uint8)
+        orientcolor = self.np.add(self.np.where((mask == 255) & (
+            orien < 90), red, black), orientcolor)
+        orientcolor = self.np.add(
+            self.np.where((mask == 255) &
+                          (orien > 90) & (orien < 180),
+                          cyan, black), orientcolor)
+        orientcolor = self.np.add(
+            self.np.where((mask == 255) & (orien > 180)
+                          & (orien < 270), green, black),
+            orientcolor)
+        orientcolor = self.np.add(self.np.where((mask == 255) & (
+            orien > 270), yellow, black), orientcolor)
+        # Apply normalization because this is an 8 bit color image which cv2.imshow() does not like
+        return self.applyNormalizationToFloatImage(orientcolor)
