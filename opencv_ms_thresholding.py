@@ -2,7 +2,9 @@ import cv2
 from matplotlib import pyplot as plt
 
 
-pic = cv2.imread("./Images/sudoku_paper2.png", 0)
+# pic = cv2.imread("./Images/sudoku_paper2.png", 0)
+pic = cv2.imread("./Images/img_coins_0.jpg", 0)
+
 # cv2.imshow('normal', pic)
 
 

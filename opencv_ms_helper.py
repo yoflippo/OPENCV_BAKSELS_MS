@@ -206,5 +206,18 @@ class opencv_ms_helper:
         return self.cv2.GaussianBlur(image, M, 0)
 
     def sharpenImageBasedOnGaussianBlur(self, pic, blurfactor=11):
+        if blurfactor % 2 == 0:
+            blurfactor = blurfactor + 1
         blurred = self.applyGaussianBlur(pic, blurfactor)
         return self.cv2.addWeighted(pic, 1.5, blurred, -0.5, 0)
+
+    def applyTextToImage(self, image, txt):
+        return self.cv2.putText(image, text=txt, org=(50, 50),
+                                fontFace=self.cv2.FONT_HERSHEY_PLAIN,
+                                fontScale=3,
+                                color=(0, 255, 0),
+                                thickness=3)
+
+    def applyNormalizationToFloatImage(self, pic):
+        return self.cv2.normalize(pic, None, 255, 0, self.cv2.NORM_MINMAX,
+                                  self.cv2.CV_8UC1)

@@ -1,30 +1,28 @@
-from matplotlib import pyplot as plt
-import cv2 as cv
 import cv2
 import opencv_ms_helper
 import numpy as np
 
 h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 
-pic1 = cv2.imread("./Images/sudoku_paper2.png", cv2.IMREAD_GRAYSCALE)  # color
+# pic1 = cv2.imread("./Images/sudoku_paper2.png", cv2.IMREAD_GRAYSCALE)
+pic1 = cv2.imread("./Images/sudoku_paper2.png", 1)  # color
 if pic1 is not None:
     print("succesfully read picture")
 else:
     print("DID NOT READ PICTURE")
 
-laplacian = cv.Laplacian(pic1, cv.CV_64F)
-sobelx = cv.Sobel(pic1, cv.CV_64F, 1, 0, ksize=5)
-sobely = cv.Sobel(pic1, cv.CV_64F, 0, 1, ksize=5)
+laplacian = cv2.Laplacian(pic1, cv2.CV_64F)
+sobelx = cv2.Sobel(pic1, cv2.CV_64F, 1, 0, ksize=5)
+sobely = cv2.Sobel(pic1, cv2.CV_64F, 0, 1, ksize=5)
 
-plt.subplot(2, 2, 1), plt.imshow(pic1, cmap='gray')
-plt.title('Original'), plt.xticks([]), plt.yticks([])
-plt.subplot(2, 2, 2), plt.imshow(laplacian, cmap='gray')
-plt.title('Laplacian'), plt.xticks([]), plt.yticks([])
-plt.subplot(2, 2, 3), plt.imshow(sobelx, cmap='gray')
-plt.title('Sobel X'), plt.xticks([]), plt.yticks([])
-plt.subplot(2, 2, 4), plt.imshow(sobely, cmap='gray')
-plt.title('Sobel Y'), plt.xticks([]), plt.yticks([])
-plt.show()
+laplacian_n = h.applyNormalizationToFloatImage(laplacian)
+laplacian_n = h.applyTextToImage(laplacian_n, "laplacian")
+sobelx_n = h.applyNormalizationToFloatImage(sobelx)
+sobelx_n = h.applyTextToImage(sobelx_n, "sobelx")
+sobely_n = h.applyNormalizationToFloatImage(sobely)
+sobely_n = h.applyTextToImage(sobely_n, "sobely")
+cv2.imshow("combined", h.combineFourImagesInQuadrant(
+    pic1, laplacian_n, sobelx_n, sobely_n, factor=0.5))
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
