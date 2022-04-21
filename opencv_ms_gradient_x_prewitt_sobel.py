@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import opencv_ms_helper
-import copy
 
 h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 

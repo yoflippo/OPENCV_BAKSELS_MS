@@ -1,5 +1,4 @@
 import os
-import copy
 
 
 class opencv_ms_helper:
@@ -216,7 +215,6 @@ class opencv_ms_helper:
         return self.cv2.addWeighted(pic, 1.5, blurred, -0.5, 0)
 
     def applyTextToImage(self, image, txt):
-        # pic = copy.deepcopy(image)
         pic = self.__testAndGiveThreeDim(image)
         return self.cv2.putText(pic, text=txt, org=(30, 50),
                                 fontFace=self.cv2.FONT_HERSHEY_PLAIN,
