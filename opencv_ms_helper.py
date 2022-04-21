@@ -1,4 +1,5 @@
 import os
+import copy
 
 
 class opencv_ms_helper:
@@ -125,7 +126,8 @@ class opencv_ms_helper:
         return pic
 
     def __giveGrayImageThreeDim(self, pic1, pic2):
-        return self.__testAndGiveThreeDim(pic1), self.__testAndGiveThreeDim(pic2)
+        return (self.__testAndGiveThreeDim(pic1),
+                self.__testAndGiveThreeDim(pic2))
 
     def shiftAndAddVertical(self, pic1, pic2):
         pic1, pic2 = self.__giveGrayImageThreeDim(pic1, pic2)
@@ -161,9 +163,10 @@ class opencv_ms_helper:
         return self.scaleImage(picout, factor)
 
     def shiftAndAddHorizontal3(self, pic1, pic2, pic3, factor=1.0):
-        pic1 = self.scaleImage(pic1, factor)
-        pic2 = self.scaleImage(pic2, factor)
-        pic3 = self.scaleImage(pic3, factor)
+        if factor < 1.0 or factor > 1.0:
+            pic1 = self.scaleImage(pic1, factor)
+            pic2 = self.scaleImage(pic2, factor)
+            pic3 = self.scaleImage(pic3, factor)
         out = self.shiftAndAddHorizontal(pic1, pic2)
         return self.shiftAndAddHorizontal(out, pic3)
 
@@ -213,7 +216,9 @@ class opencv_ms_helper:
         return self.cv2.addWeighted(pic, 1.5, blurred, -0.5, 0)
 
     def applyTextToImage(self, image, txt):
-        return self.cv2.putText(image, text=txt, org=(30, 50),
+        # pic = copy.deepcopy(image)
+        pic = self.__testAndGiveThreeDim(image)
+        return self.cv2.putText(pic, text=txt, org=(30, 50),
                                 fontFace=self.cv2.FONT_HERSHEY_PLAIN,
                                 fontScale=3,
                                 color=(0, 255, 0),
@@ -254,5 +259,6 @@ class opencv_ms_helper:
             orientcolor)
         orientcolor = self.np.add(self.np.where((mask == 255) & (
             orien > 270), yellow, black), orientcolor)
-        # Apply normalization because this is an 8 bit color image which cv2.imshow() does not like
+        # Apply normalization because this is an 8 bit color image
+        # which cv2.imshow() does not like
         return self.applyNormalizationToFloatImage(orientcolor)
