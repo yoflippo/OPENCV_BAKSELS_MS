@@ -1,8 +1,7 @@
 import cv2
-from matplotlib import pyplot as plt
 import numpy as np
-import add2pictures2one as ap
-import differenceBetweenPictures as dp
+import opencv_ms_helper
+h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 
 pic = cv2.imread("./Images/New_Zealand_Lake.jpg",
                  cv2.IMREAD_UNCHANGED)  # color
@@ -21,21 +20,17 @@ print(kernel, kernel.shape, np.transpose(kernel.shape))
 pic_blurebyfilter = cv2.sepFilter2D(pic, -1, k, k)
 pic_gaussianblur = cv2.GaussianBlur(pic, kernel.shape, sigma)
 
-result = ap.shiftAndAdd(pic, ap.shiftAndAdd(
-    pic_gaussianblur, pic_blurebyfilter))
-
+result = h.shiftAndAddHorizontal3(pic, pic_gaussianblur, pic_blurebyfilter)
 cv2.imshow("normal, filtered 2d, opencv gaussian", result)
 
 
-pic_dif = dp.getDifferenceBetweenPictures(
+pic_dif = h.getDifferenceBetweenPictures(
     pic_blurebyfilter, pic_gaussianblur)
-
 cv2.imshow("difference between gaussian blurs",
            pic_dif)
 
-
 pic_med = cv2.medianBlur(pic, shape)
-pic_dif_med = dp.getDifferenceBetweenPictures(
+pic_dif_med = h.getDifferenceBetweenPictures(
     pic_gaussianblur, pic_med)
 
 cv2.imshow("difference between gaussian blur and median blur",
