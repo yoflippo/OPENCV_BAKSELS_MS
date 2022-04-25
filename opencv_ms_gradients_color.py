@@ -17,7 +17,8 @@ pic1 = h.applyGaussianBlur(pic1, 3)
 sobelx = cv2.Sobel(pic1, cv2.CV_32F, 1, 0)
 sobely = cv2.Sobel(pic1, cv2.CV_32F, 0, 1)
 
-orientcolor = h.gradientColor(pic1)
+orientcolor, _, _ = h.gradientColor(
+    pic1, threshbinarylow=50)
 
 sobelx_n = h.applyNormalizationToFloatImage(sobelx)
 sobelx_n = h.applyTextToImage(sobelx_n, "sobelx")
@@ -25,7 +26,7 @@ sobely_n = h.applyNormalizationToFloatImage(sobely)
 sobely_n = h.applyTextToImage(sobely_n, "sobely")
 orientcolor = h.applyTextToImage(orientcolor, "grad. orien. color")
 
-cv2.imshow("combined", h.combineFourImagesInQuadrant(
+cv2.imshow("combined Opencv sobel", h.combineFourImagesInQuadrant(
     pic1, sobelx_n, sobely_n, orientcolor, factor=0.7))
 
 cv2.waitKey(0)

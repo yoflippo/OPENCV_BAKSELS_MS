@@ -218,9 +218,9 @@ class opencv_ms_helper:
         pic = self.__testAndGiveThreeDim(image)
         return self.cv2.putText(pic, text=txt, org=(30, 50),
                                 fontFace=self.cv2.FONT_HERSHEY_PLAIN,
-                                fontScale=3,
+                                fontScale=2,
                                 color=(0, 255, 0),
-                                thickness=3)
+                                thickness=2)
 
     def applyNormalizationToFloatImage(self, pic):
         return self.cv2.normalize(pic, None, 255, 0, self.cv2.NORM_MINMAX,
@@ -230,7 +230,6 @@ class opencv_ms_helper:
         pic1 = self.applyGaussianBlur(pic, 3)
         sobelx = self.cv2.Sobel(pic1, self.cv2.CV_32F, 1, 0)
         sobely = self.cv2.Sobel(pic1, self.cv2.CV_32F, 0, 1)
-
         orien = self.cv2.phase(sobelx, sobely, angleInDegrees=True)
         mag = self.cv2.magnitude(sobelx, sobely)
 
@@ -259,4 +258,4 @@ class opencv_ms_helper:
             orien > 270), yellow, black), orientcolor)
         # Apply normalization because this is an 8 bit color image
         # which cv2.imshow() does not like
-        return self.applyNormalizationToFloatImage(orientcolor)
+        return self.applyNormalizationToFloatImage(orientcolor), mag, orien
