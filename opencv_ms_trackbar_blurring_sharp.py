@@ -41,9 +41,9 @@ def funcCan(stub):
 
 
 if __name__ == '__main__':
-    original = cv2.imread("./Images/einstein.jpg", 1)
+    original = cv2.imread("./Images/unsharp_javalaan.png", 0)
     img = original.copy()
-
+    img = h.scaleImage(img, 0.5)
     cv2.namedWindow(windowname)
     cv2.resizeWindow(windowname, 500, 500)
 

@@ -5,7 +5,7 @@ import numpy as np
 h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 
 pic1 = cv2.imread("./Images/einstein.jpg", 1)
-pic1 = h.scaleImage(pic1, 0.9)
+pic1 = h.scaleImage(pic1, 0.7)
 
 if pic1 is not None:
     print("succesfully read picture")

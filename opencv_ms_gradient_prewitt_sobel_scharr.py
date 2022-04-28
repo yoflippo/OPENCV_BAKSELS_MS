@@ -5,7 +5,7 @@ import opencv_ms_helper
 h = opencv_ms_helper.opencv_ms_helper(cv2, np)
 
 pic = cv2.imread("./Images/einstein.jpg", 0)  # color
-pic = h.applyGaussianBlur(pic, 5)  # lpf
+pic = h.applyGaussianBlur(pic, 9)  # lpf
 
 prewitt_x = np.array([[-1, 0, 1],
                       [-1, 0, 1],
