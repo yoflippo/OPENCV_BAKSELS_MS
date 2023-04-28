@@ -19,7 +19,7 @@ def rotatems(pic, cols, rows, numberoftimes=1):
     return rotate
 
 
-rotate = rotatems(pic, cols, rows, 4)
+rotate = rotatems(pic, cols, rows, 3)
 
 
 cv2.imshow('normal', pic)

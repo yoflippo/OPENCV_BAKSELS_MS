@@ -63,7 +63,7 @@ if __name__ == '__main__':
     cv2.createTrackbar(threshold3Name, windowname, 1, 255, funcCan)
     cv2.createTrackbar(threshold4Name, windowname, 200, 255, funcCan)
     cv2.createTrackbar(threshold5Name, windowname, 10, 255, funcCan)
-    cv2.createTrackbar(threshold6Name, windowname, 10, 255, funcCan)
+    cv2.createTrackbar(threshold6Name, windowname, 50, 255, funcCan)
     funcCan(windowname)
 
     cv2.waitKey(0)

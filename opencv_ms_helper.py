@@ -1,4 +1,5 @@
 import os
+import copy
 
 
 class opencv_ms_helper:
@@ -143,6 +144,8 @@ class opencv_ms_helper:
 
     def shiftAndAddHorizontal(self, pic1, pic2):
         pic1, pic2 = self.__giveGrayImageThreeDim(pic1, pic2)
+        pic1 = copy.deepcopy(pic1)
+        pic2 = copy.deepcopy(pic2)
 
         h1, w1 = pic1.shape[:2]
         h2, w2 = pic2.shape[:2]

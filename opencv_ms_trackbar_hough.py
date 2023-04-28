@@ -9,12 +9,14 @@ tbName1 = "CE-thresh1"
 tbName1a = "houghaccum"
 tbName2 = "CE-thresh2"
 tbName3 = "houghlines"
-tbName4 = "houghprob"
+tbName4 = "houghprob_steps"
 tbName5 = "size"
+size = 5
 
 
 def applyAndDrawHoughLines(edges, steps, accum):
-    lines = cv2.HoughLines(edges, 1, np.pi / steps, accum, None, 0, 0)
+    lines = cv2.HoughLines(edges, cv2.HOUGH_GRADIENT_ALT,
+                           np.pi / steps, accum, None, 0, 0)
     picout = pic1.copy()
     if lines is not None:
         linelength = 1000
@@ -48,7 +50,7 @@ def funcCan(stub):
     stepsH = cv2.getTrackbarPos(tbName3, windowname)
     ceacc = cv2.getTrackbarPos(tbName1a, windowname)
     stepsHP = cv2.getTrackbarPos(tbName4, windowname)
-    size = cv2.getTrackbarPos(tbName5, windowname)
+    # size = cv2.getTrackbarPos(tbName5, windowname)
 
     edges = cv2.Canny(pic1, cefac1, cefac2)
     picout = applyAndDrawHoughLines(edges, stepsH, ceacc)
@@ -65,17 +67,18 @@ if __name__ == '__main__':
     else:
         print("DID NOT READ PICTURE")
     img = pic1.copy()
+    img = h.applyGaussianBlur(img, 5)
 
     cv2.namedWindow(windowname)
-    cv2.resizeWindow(windowname, 500, 500)
+    # cv2.resizeWindow(windowname, 500, 500)
 
     cv2.createTrackbar(tbName1, windowname, 10, 300, funcCan)
     cv2.createTrackbar(tbName1a, windowname, 1, 300, funcCan)
     cv2.createTrackbar(tbName2, windowname, 10, 300, funcCan)
     cv2.createTrackbar(tbName3, windowname, 1, 100, funcCan)
     cv2.createTrackbar(tbName4, windowname, 1, 100, funcCan)
-    cv2.createTrackbar(tbName5, windowname, 1, 10, funcCan)
-    cv2.setTrackbarPos(tbName5, windowname, 5)
+    # cv2.createTrackbar(tbName5, windowname, 1, 10, funcCan)
+    # cv2.setTrackbarPos(tbName5, windowname, 5)
     funcCan(0)
 
     cv2.waitKey(0)

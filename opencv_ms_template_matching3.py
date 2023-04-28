@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
-import opencv_ms_helper
+import opencv_ms_helper as h
 # https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_template_matching/py_template_matching.html#goals
 
-mshelp = opencv_ms_helper.opencv_ms_helper(cv2, np)
+mshelp = h.opencv_ms_helper(cv2, np)
 path1 = "./Images/mario2.png"
 pic1 = cv2.imread(path1, cv2.IMREAD_UNCHANGED)
+pic1 = h.opencv_ms_helper.scaleImage(pic1, 0.5)
 path2 = "./Images/mario2_coin.png"
 template = cv2.imread(path2, cv2.IMREAD_UNCHANGED)
 
